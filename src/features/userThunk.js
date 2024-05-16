@@ -4,7 +4,7 @@ import axiosApi from "../axiosApi";
 
 export const signUp = createAsyncThunk("user/signUp", async (userData, {rejectWithValue}) => {
   try {
-    const response = await axiosApi.post("register/", userData);
+    const response = await axiosApi.post("/user/register/", userData);
     return response.data;
   }
   catch (e) {
@@ -17,7 +17,7 @@ export const signUp = createAsyncThunk("user/signUp", async (userData, {rejectWi
 
 export const signIn = createAsyncThunk("user/signIn", async (userData, {rejectWithValue}) => {
   try {
-    const response = await axiosApi.post("login/", userData);
+    const response = await axiosApi.post("/user/login/", userData);
     return response.data;
   }
   catch (e) {
@@ -26,5 +26,4 @@ export const signIn = createAsyncThunk("user/signIn", async (userData, {rejectWi
     }
     throw e;
   }
-
 });

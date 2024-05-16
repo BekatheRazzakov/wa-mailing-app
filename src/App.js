@@ -2,12 +2,14 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import MailsList from "./containers/MailsList/MailsList";
 import MailToAll from "./containers/MailToAll/MailToAll";
 import MailToOne from "./containers/MailToOne/MailToOne";
+import Toolbar from "./components/Toolbar/Toolbar";
 import Login from "./containers/Login/Login";
 import './App.css';
 
 function App() {
   return (
     <div className="App">
+      <Toolbar />
       <Routes>
         <Route path='*' element={<Navigate to="/statistics" replace/>}/>
         <Route path='login' element={<Login/>}/>
