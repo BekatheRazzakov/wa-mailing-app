@@ -40,3 +40,7 @@
 .all-mails-item-row strong {
   min-width: 144px;
 }
+
+.tag-suggestion {
+  font-size: 12px;
+}
