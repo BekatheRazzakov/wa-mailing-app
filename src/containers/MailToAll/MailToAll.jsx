@@ -14,10 +14,10 @@ const MailToAll = () => {
   });
   const [selectedDate, setSelectedDate] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [clientIsReady, setClientIsReady] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [tagIndex, setTagIndex] = useState(false);
-  const [qr, setQr] = useState('');
   
   const onChange = (e) => {
     const {name, value} = e.target;
@@ -43,15 +43,9 @@ const MailToAll = () => {
     
     ws.onmessage = (e) => {
       const message = JSON.parse(e.data);
-      if (message.type === 'qrCode' && message.qrCode) {
-        console.log(message.qrCode);
-        setQr(message.qrCode);
-      }
-      if (message.type === 'connecting') setLoading(true);
-      if (message.type === 'connected') setLoading(false);
-      if (message.type === 'error') setErrorMessage(message.message);
-      if (message.type !== 'error' && errorMessage) setErrorMessage('');
-      if (message.message === 'message sent') navigate('/all-mails');
+      if (message.type === 'connection') setClientIsReady(message.status);
+      if (message.type === 'mailing' && message.status) navigate('/all-mails');
+      if (message.type === 'mailing' && !message.status) setErrorMessage('Ошибка при отправке, попробуйте снова');
     };
     
     return () => {
@@ -75,7 +69,10 @@ const MailToAll = () => {
     try {
       setLoading(true);
       await sendMessageToWS({
-        type: 'mailToAll', payload: state,
+        type: 'mailToAll', payload: {
+          ...state,
+          scheduleDate: selectedDate ? new Date(selectedDate) : null,
+        },
       });
       setLoading(false);
     } catch (e) {
@@ -97,6 +94,7 @@ const MailToAll = () => {
         name='message'
         value={state.message}
         onChange={onChange}
+        disabled={!clientIsReady}
       />
           {
             showSuggestions &&
@@ -143,22 +141,24 @@ const MailToAll = () => {
             }));
           };
         }}
+        disabled={!clientIsReady}
       />
     </div>
     <div className="mt-3">
       <DateTime value={selectedDate} onChange={handleDateChange}/>
     </div>
-    <button type="submit" className="btn btn-primary mt-3"
-            disabled={loading || !state.abons || !state.message}>Отправить
+    <button
+      type="submit" className="btn btn-primary mt-3"
+      disabled={loading || !state.abons || !state.message}>
+      {
+        !loading ? clientIsReady ? 'Отправить' : 'Подключение...' : ''
+      }
+      {loading ? 'Отправка...' : ''}
     </button>
     <div style={{
       display: 'flex', alignItems: 'center', flexDirection: 'column', marginTop: '20px', gap: '10px'
     }}>
       {!!errorMessage.length && <h6>{errorMessage}</h6>}
-      {qr && <>
-        <h6>Попробуйте отсканировать QR код, а затем отправить сообщение</h6>
-        <img src={qr} alt="QR code" width="200" height="200"/>
-      </>}
     </div>
   </form>);
 };

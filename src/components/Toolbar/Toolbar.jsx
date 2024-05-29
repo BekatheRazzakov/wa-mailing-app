@@ -20,10 +20,10 @@ const Toolbar = () => {
       <div className="container-fluid">
         <a className="navbar-brand" href="#">WhatsApp рассылка</a>
         <ul className="nav nav-underline">
-          {/*<li className="nav-item">*/}
-          {/*  <a className={`nav-link ${location.pathname === '/scan_qr' ? 'active' : ''}`} aria-current="page"*/}
-          {/*     href="/scan_qr">QR Код</a>*/}
-          {/*</li>*/}
+          <li className="nav-item">
+            <a className={`nav-link ${location.pathname === '/scan_qr' ? 'active' : ''}`} aria-current="page"
+               href="/scan_qr">QR Код</a>
+          </li>
           <li className="nav-item">
             <a className={`nav-link ${location.pathname === '/mail-to-one' ? 'active' : ''}`} aria-current="page"
                href="/mail-to-one">Одиночная отправка</a>
