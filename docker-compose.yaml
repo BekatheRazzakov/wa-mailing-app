@@ -1,7 +1,7 @@
 services:
   bonuses:
     build: ./
-    container_name: dashboard
+    container_name: wa-mailing-app
     ports:
       - '3000:3000'
     stdin_open: true

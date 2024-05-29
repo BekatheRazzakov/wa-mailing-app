@@ -16,7 +16,7 @@ COPY . .
 # Build the React app for production
 RUN npm run build
 
-# Expose port 80
+# Expose port 81
 EXPOSE 81
 
 # Command to run the application
