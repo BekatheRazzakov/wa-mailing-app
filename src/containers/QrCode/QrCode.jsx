@@ -1,41 +1,45 @@
-import React, {useState, useEffect} from 'react';
-
-const URL = 'ws://localhost:8000/ws';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axiosApi from '../../axiosApi';
 
 const QrCode = () => {
-  const [ws, setWs] = useState(new WebSocket(URL));
+  const navigate = useNavigate();
   const [qrCode, setQrCode] = useState('');
-  const [connectionStatus, setConnectionStatus] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [qrLoading, setQrLoading] = useState(false);
+  const [qrLoadingMessage, setQrLoadingMessage] = useState('');
   
   useEffect(() => {
-    ws.onopen = () => {
-      console.log("WebSocket Connected");
-      ws.send(JSON.stringify({type: 'get_qr'}));
+    const getInitialQr = async () => {
+      setQrLoading(true);
+      await getQrCode();
+      setQrLoading(false);
     };
+    void getInitialQr();
     
-    ws.onmessage = (e) => {
-      const message = JSON.parse(e.data);
-      console.log(message);
-      if (message.type === 'qr') setQrCode(message.message);
-      if (message.type === 'connection') setLoading(!message.status);
-      if (message.type === 'clientConnection') setConnectionStatus(message.message);
-      // if (message.type === 'message sent') navigate('/all-mails');
-    };
+    const intervalId = setInterval(() => {
+      void getQrCode();
+    }, 10000);
     
-    return () => {
-      ws.onclose = () => {
-        console.log("WebSocket Disconnected");
-        setWs(new WebSocket(URL));
-      };
-    };
-  }, [ws.onmessage, ws.onopen, ws.onclose, ws, URL]);
+    return () => clearInterval(intervalId);
+  }, []);
+  
+  const getQrCode = async () => {
+    const req = await axiosApi(`/mailing/get_qr`);
+    const res = await req.data;
+    setQrCode(res.qrImgSrc);
+    if (res.hasQr) {
+      setQrLoadingMessage('');
+    } else {
+      setQrLoadingMessage('QR код генерируется, подожите...');
+    }
+    if (res.clientIsReady) navigate('/mail-to-one');
+  };
   
   return (
     <div style={{display: 'flex', justifyContent: 'center', padding: '20px 0 0 0'}}>
-      {
-        !loading && qrCode ? <img src={qrCode} alt="QR Code"/> : <h2>Загрузка...</h2>
-      }
+      {qrLoading && <h2>Загрузка...</h2>}
+      {!!qrLoadingMessage && <h2>{qrLoadingMessage}</h2>}
+      {!!qrCode && <img src={qrCode} alt="QR Code"/>}
     </div>
   );
 };
