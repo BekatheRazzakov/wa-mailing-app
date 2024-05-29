@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DateTime from 'react-datetime';
 import * as XLSX from 'xlsx';
+import axiosApi from '../../axiosApi';
 
 const MailToAll = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const MailToAll = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [tagIndex, setTagIndex] = useState(false);
+  const [mailResponse, setMailResponse] = useState('');
   
   const onChange = (e) => {
     const {name, value} = e.target;
@@ -29,8 +31,11 @@ const MailToAll = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
+      await axiosApi.post('/mailing/send_to_all', state);
+      navigate('/all-mails');
     } catch (e) {
       console.log(e);
+      setMailResponse(e.response.data.message);
     }
   };
   

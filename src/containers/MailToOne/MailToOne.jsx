@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axiosApi from '../../axiosApi';
 
 const MailToOne = () => {
   const navigate = useNavigate();
@@ -7,6 +8,8 @@ const MailToOne = () => {
     message: '',
     phone_number: '',
   });
+  const [mailLoading, setMailLoading] = useState(false);
+  const [mailResponse, setMailResponse] = useState('');
   
   const onChange = (e) => {
     const {name, value} = e.target;
@@ -19,8 +22,16 @@ const MailToOne = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
+      setMailLoading(true);
+      setMailResponse('');
+      const req = await axiosApi.post('/mailing/send_to_one', state);
+      const res = await req.data;
+      setMailLoading(false);
+      if (res.message) navigate('/all-mails');
     } catch (e) {
       console.log(e);
+      setMailLoading(false);
+      setMailResponse(e.response.data.message);
     }
   };
   
@@ -62,6 +73,7 @@ const MailToOne = () => {
         marginTop: '20px',
         gap: '10px'
       }}>
+        <h6>{mailResponse}</h6>
       </div>
     </form>
   );

@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosApi from '../../axiosApi';
 
 const MailsList = () => {
   const [mails, setMails] = useState([]);
-
+  
   useEffect(() => {
     void getMails();
   }, []);
-
+  
   const getMails = async () => {
     try {
       const req = await axiosApi('/mailing/get_all');
@@ -17,17 +17,19 @@ const MailsList = () => {
       console.log(e);
     }
   };
-
+  
   const formatDate = (date) => {
     const pad = (num, size) => num.toString().padStart(size, '0');
-
+    
     const year = date.getFullYear();
     const month = pad(date.getMonth() + 1, 2);
     const day = pad(date.getDate(), 2);
-
-    return `${year}-${month}-${day}`;
+    const hour = pad(date.getHours(), 2);
+    const minutes = pad(date.getMinutes(), 2);
+    
+    return `${day}.${month}.${year} ${hour}:${minutes}`;
   };
-
+  
   return (
     <div className="all-mails">
       {
@@ -49,6 +51,13 @@ const MailsList = () => {
               <strong>Статус: </strong>
               <span>{mail.deliver_status ? 'Отправлено' : 'Не отправлено'}</span>
             </div>
+            {
+              !mail.deliver_status &&
+              <div className="all-mails-item-row">
+                <strong>Причина: </strong>
+                <span>{mail.reason}</span>
+              </div>
+            }
           </div>
         ))
       }
