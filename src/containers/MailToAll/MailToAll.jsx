@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DateTime from 'react-datetime';
@@ -14,6 +14,15 @@ const MailToAll = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [tagIndex, setTagIndex] = useState(false);
   const [mailResponse, setMailResponse] = useState('');
+  
+  useEffect(() => {
+    const checkClient = async () => {
+      const req = await axiosApi.get(`/mailing/check_client`);
+      const res = await req.data;
+      if (!res) navigate('/scan_qr');
+    };
+    void checkClient();
+  }, []);
   
   const onChange = (e) => {
     const {name, value} = e.target;
