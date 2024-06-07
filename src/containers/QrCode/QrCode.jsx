@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from "../../app/hooks";
 import axiosApi from '../../axiosApi';
 
 const QrCode = () => {
   const navigate = useNavigate();
+  const user = useAppSelector(state => state.userState.user);
   const [qrCode, setQrCode] = useState('');
   const [qrLoading, setQrLoading] = useState(false);
   const [qrLoadingMessage, setQrLoadingMessage] = useState('');
@@ -24,6 +26,7 @@ const QrCode = () => {
   }, []);
   
   const getQrCode = async () => {
+    if (!user) return navigate('/login');
     const req = await axiosApi(`/mailing/get_qr`);
     const res = await req.data;
     setQrCode(res.qrImgSrc);

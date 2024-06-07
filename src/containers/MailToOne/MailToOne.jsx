@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {useAppSelector} from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import axiosApi from '../../axiosApi';
 
 const MailToOne = () => {
@@ -84,7 +84,8 @@ const MailToOne = () => {
         disabled={!state.phone_number || !state.message}
       >{
         mailLoading ?
-          <div className="spinner-border" role="status" /> : 'Отправить'}</button>
+          <div className="spinner-border" role="status"/> : 'Отправить'
+      }</button>
       <div style={{
         display: 'flex',
         alignItems: 'center',
