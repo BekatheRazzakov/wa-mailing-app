@@ -12,7 +12,7 @@ function App() {
     <div className="App">
       <Toolbar />
       <Routes>
-        <Route path='*' element={<Navigate to="/statistics" replace/>}/>
+        <Route path='*' element={<Navigate to="/scan_qr" replace/>}/>
         <Route path='login' element={<Login/>}/>
         <Route path='all-mails' element={<MailsList/>}/>
         <Route path='mail-to-all' element={<MailToAll/>}/>
