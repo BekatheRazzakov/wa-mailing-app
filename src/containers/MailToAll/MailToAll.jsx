@@ -19,9 +19,13 @@ const MailToAll = () => {
   
   useEffect(() => {
     const checkClient = async () => {
-      const req = await axiosApi.get(`/mailing/check_client`);
-      const res = await req.data;
-      if (!res) navigate('/scan_qr');
+      try {
+        const req = await axiosApi.get(`/mailing/check_client`);
+        const res = await req.data;
+        if (!res) navigate('/scan_qr');
+      } catch (e) {
+        console.log(e);
+      }
     };
     if (user) {
       void checkClient();
