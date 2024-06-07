@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {useAppSelector} from "../../app/hooks";
 import axiosApi from '../../axiosApi';
 
 const MailToOne = () => {
   const navigate = useNavigate();
+  const user = useAppSelector(state => state.userState.user);
   const [state, setState] = useState({
     message: '',
     phone_number: '',
@@ -17,7 +19,9 @@ const MailToOne = () => {
       const res = await req.data;
       if (!res) navigate('/scan_qr');
     };
-    void checkClient();
+    if (user) {
+      void checkClient();
+    }
   }, []);
   
   const onChange = (e) => {

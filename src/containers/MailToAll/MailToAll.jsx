@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import {useAppSelector} from "../../app/hooks";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DateTime from 'react-datetime';
 import * as XLSX from 'xlsx';
@@ -7,6 +8,7 @@ import axiosApi from '../../axiosApi';
 
 const MailToAll = () => {
   const navigate = useNavigate();
+  const user = useAppSelector(state => state.userState.user);
   const [state, setState] = useState({
     message: '', abons: null,
   });
@@ -21,7 +23,9 @@ const MailToAll = () => {
       const res = await req.data;
       if (!res) navigate('/scan_qr');
     };
-    void checkClient();
+    if (user) {
+      void checkClient();
+    }
   }, []);
   
   const onChange = (e) => {
