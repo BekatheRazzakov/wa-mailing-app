@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import {useAppSelector} from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DateTime from 'react-datetime';
 import * as XLSX from 'xlsx';
@@ -15,6 +15,7 @@ const MailToAll = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [tagIndex, setTagIndex] = useState(false);
+  const [mailLoading, setMailLoading] = useState(false);
   const [mailResponse, setMailResponse] = useState('');
   
   useEffect(() => {
@@ -48,7 +49,12 @@ const MailToAll = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axiosApi.post('/mailing/send_to_all', state);
+      setMailLoading(true);
+      await axiosApi.post('/mailing/send_to_all', {
+        ...state,
+        scheduleDate: selectedDate,
+      });
+      setMailLoading(false);
       navigate('/all-mails');
     } catch (e) {
       console.log(e);
@@ -124,8 +130,21 @@ const MailToAll = () => {
       </div>
       <button
         type="submit" className="btn btn-primary mt-3"
-        disabled={!state.abons || !state.message}>Отправить
+        disabled={!state.abons || !state.message}>
+        {
+          mailLoading ?
+            <div className="spinner-border" role="status"/> : 'Отправить'
+        }
       </button>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+        marginTop: '20px',
+        gap: '10px'
+      }}>
+        <h6>{mailResponse}</h6>
+      </div>
     </form>
   );
 };

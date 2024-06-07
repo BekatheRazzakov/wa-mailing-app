@@ -19,26 +19,30 @@ const Toolbar = () => {
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
         <a className="navbar-brand" href="#">WhatsApp рассылка</a>
-        <ul className="nav nav-underline">
-          <li className="nav-item">
-            <a className={`nav-link ${location.pathname === '/scan_qr' ? 'active' : ''}`} aria-current="page"
-               href="/scan_qr">QR Код</a>
-          </li>
-          <li className="nav-item">
-            <a className={`nav-link ${location.pathname === '/mail-to-one' ? 'active' : ''}`} aria-current="page"
-               href="/mail-to-one">Одиночная отправка</a>
-          </li>
-          <li className="nav-item">
-            <a className={`nav-link ${location.pathname === '/mail-to-all' ? 'active' : ''}`} href="/mail-to-all">Массовая
-              отправка</a>
-          </li>
-          <li className="nav-item">
-            <a className={`nav-link ${location.pathname === '/all-mails' ? 'active' : ''}`} href="/all-mails">Архив</a>
-          </li>
-          <li className="nav-item" onClick={() => dispatch(logout())}>
-            <span className={`nav-link`}>Выйти</span>
-          </li>
-        </ul>
+        {
+          user &&
+          <ul className="nav nav-underline">
+            <li className="nav-item">
+              <a className={`nav-link ${location.pathname === '/scan_qr' ? 'active' : ''}`} aria-current="page"
+                 href="/scan_qr">QR Код</a>
+            </li>
+            <li className="nav-item">
+              <a className={`nav-link ${location.pathname === '/mail-to-one' ? 'active' : ''}`} aria-current="page"
+                 href="/mail-to-one">Одиночная отправка</a>
+            </li>
+            <li className="nav-item">
+              <a className={`nav-link ${location.pathname === '/mail-to-all' ? 'active' : ''}`} href="/mail-to-all">Массовая
+                отправка</a>
+            </li>
+            <li className="nav-item">
+              <a className={`nav-link ${location.pathname === '/all-mails' ? 'active' : ''}`}
+                 href="/all-mails">Архив</a>
+            </li>
+            <li className="nav-item" onClick={() => dispatch(logout())}>
+              <span className={`nav-link`}>Выйти</span>
+            </li>
+          </ul>
+        }
       </div>
     </nav>
   );
